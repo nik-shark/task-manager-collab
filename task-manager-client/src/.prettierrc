@@ -3,5 +3,5 @@
   "semi": true,
   "endOfLine": "lf",
   "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindStylesheet": "./src/App.css"
+  "tailwindStylesheet": "./App.css"
 }

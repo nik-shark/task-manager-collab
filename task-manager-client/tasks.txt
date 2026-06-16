@@ -1,0 +1,21 @@
+api/v1/boards/ 
+
+1) Получать все борды, по юзер id
+url: /boards/ (get all bords) по юзер id 
+
+2) Создавать новый борд, по юзер id
+
+api/v1/boards/ (post new board)
+
+3) Удалить борду
+
+api/v1/boards/:id={....} (delele)
+
+4) Обновит борду
+
+api/v1/baords/:id={...} (put / patch)
+
+URLS:
+http://127.0.0.1:8000/
+http://127.0.0.1:8000/docs
+http://127.0.0.1:8000/redoc
