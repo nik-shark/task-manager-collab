@@ -1,11 +1,12 @@
-// import axios from 'axios'
 import { type BoardType } from '../types/types';
+
+// import axios from 'axios'
 
 // const api = axios.create({
 //     baseURL: 'http://127.0.0.1:8000/'
 // })
 
-const MOCK_BOARDS:BoardType[] = [
+let MOCK_BOARDS:BoardType[] = [
   {
     id: "1",
     user_id: "1",
@@ -44,5 +45,29 @@ export async function createNewBoard(boardTitle: string) {
   MOCK_BOARDS.push(newBoard)
 
   // const response = await api.post("api/v1/boards", boardTitle);
+  // return response.data;
+}
+
+export async function deleteBoard(boardId: string) {
+  await new Promise(resolve => setTimeout(resolve, 1000))
+
+  MOCK_BOARDS = [...MOCK_BOARDS].filter(board => board.id !== boardId);
+  
+  // const response = await api.delete(`api/v1/boards/${boardId}/`);
+  // return response.data
+}
+
+
+export async function editBoard(boardId: string, newTitle: string) {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  MOCK_BOARDS = MOCK_BOARDS.map(board => {
+    if (board.id === boardId) {
+      return { ...board, title: newTitle };
+    }
+    return board;
+  })
+
+  // const response = await api.put(`api/v1/boards/${boardId}`, { title: newTitle });
+
   // return response.data;
 }
