@@ -1,15 +1,42 @@
 // import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { BoardType } from "../types/types";
-import { getAllBoards } from "../API/boards";
+import { getAllBoards, deleteBoard } from "../API/boards";
 import BoardCard from "./BoardCard";
+import { useState, type Dispatch, type SetStateAction } from "react";
+import ModalMenu from "./ModalMenu";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type BoardModalType } from "../src/App";
 
 interface BoardsProps {
   onOpenModal: () => void;
+  onChangeMode: Dispatch<SetStateAction<BoardModalType>>;
 }
+type ModalModeType =
+  | { mode: "closed" }
+  | { mode: "open"; boardId: string; top: number; left: number };
 
-export default function Boards({ onOpenModal }: BoardsProps) {
-  //   const [board, setBoard] = useState(null);
+export default function Boards({ onOpenModal, onChangeMode }: BoardsProps) {
+  const [modalMode, setModalMode] = useState<ModalModeType>({ mode: "closed" });
+  const queryClient = useQueryClient();
+
+  function handleModalOpen(
+    boardId: string,
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setModalMode({
+      boardId: boardId,
+      mode: "open",
+      top: rect.bottom + window.scrollY - 100,
+      left: rect.right - 220,
+    });
+  }
+
+  function handleModalClose() {
+    setModalMode({ mode: "closed" });
+  }
 
   const {
     data: boards,
@@ -19,6 +46,18 @@ export default function Boards({ onOpenModal }: BoardsProps) {
     queryKey: ["boards"],
     queryFn: getAllBoards,
   });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteBoard,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["boards"] });
+      handleModalClose();
+    },
+  });
+
+  function handleDeleteBoard(boardId: string) {
+    mutate(boardId);
+  }
 
   let content;
 
@@ -39,7 +78,11 @@ export default function Boards({ onOpenModal }: BoardsProps) {
     );
   } else {
     content = boards.map((board) => (
-      <BoardCard key={`${board.title}-${board.id}`} board={board} />
+      <BoardCard
+        onOpenModal={handleModalOpen}
+        key={`${board.title}-${board.id}`}
+        board={board}
+      />
     ));
   }
 
@@ -47,6 +90,21 @@ export default function Boards({ onOpenModal }: BoardsProps) {
     <main
       className={`w-full h-full bg-fuchsia-200 p-6 ${isLoading || isError || !boards || boards.length === 0 ? "grid place-items-center" : "grid grid-cols-1 md:grid-cols-3 gap-4 content-start"} `}
     >
+      {modalMode.mode === "open" && (
+        <ModalMenu
+          isPending={isPending}
+          boardId={modalMode.boardId}
+          onEdit={(newMode) => {
+            onChangeMode(newMode);
+            handleModalClose();
+            onOpenModal();
+          }}
+          onDelete={handleDeleteBoard}
+          onClose={handleModalClose}
+          top={modalMode.top}
+          left={modalMode.left}
+        />
+      )}
       {content}
     </main>
   );
