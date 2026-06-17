@@ -1,40 +1,36 @@
-import { useState } from "react";
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
+import Boards from '../components/Boards';
+import Modal from '../components/Modal';
+import './App.css';
+import { type ModalHandle } from '../components/Modal';
+import { useRef } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import "./App.css";
-
-
-
+const queryClient = new QueryClient();
 
 function App() {
-  const [message, setMessage] = useState();
+  const dialog = useRef<ModalHandle>(null);
 
-
-
-  async function fetchData() {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/home/');
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch data!')
-    }
-    const data = await response.json();
-    setMessage(data.message);
-  } catch (error) {
-    console.log('Failed to get data', error)
+  function handleOpenModal() {
+    if (!dialog.current) return;
+    dialog.current.open();
   }
-}
-
-
-
 
   return (
     <>
-      <button onClick={fetchData}>Ckick me!</button>
-      {message && <p className="text-8xl text-stone-900 bg-stone-200">{message}</p>}
+      <QueryClientProvider client={queryClient}>
+        <Modal ref={dialog} />
+        <div className="flex h-screen w-full">
+          <Sidebar />
+          <div className="flex h-full w-full flex-col">
+            <Header onOpenModal={handleOpenModal} />
+            <Boards onOpenModal={handleOpenModal} />
+          </div>
+        </div>
+      </QueryClientProvider>
     </>
   );
 }
 
 export default App;
-
-
