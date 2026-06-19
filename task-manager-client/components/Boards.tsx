@@ -44,13 +44,27 @@ export default function Boards({ onOpenModal, onChangeMode }: BoardsProps) {
     isError,
   } = useQuery<BoardType[]>({
     queryKey: ["boards"],
-    queryFn: getAllBoards,
+    queryFn: () => getAllBoards(1), //! SEND MOCK USER ID
   });
 
+  // const { mutate, isPending } = useMutation({
+  //   mutationFn: deleteBoard,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["boards"] });
+  //     handleModalClose();
+  //   },
+  // });
+
   const { mutate, isPending } = useMutation({
-    mutationFn: deleteBoard,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["boards"] });
+    mutationFn: (boardId: string) => deleteBoard(boardId),
+
+    //! IF BACK DOESN'T RETURN DELETED OBJECT USE ID FROM PARAMS, AS AUTO SECOND ARGUMENT OF "ON SUCCESS"
+    onSuccess: (_, boardId) => {
+      queryClient.setQueryData<BoardType[]>(["boards"], (oldBoards) => {
+        return oldBoards
+          ? oldBoards.filter((board) => board.id !== boardId)
+          : [];
+      });
       handleModalClose();
     },
   });
@@ -78,11 +92,7 @@ export default function Boards({ onOpenModal, onChangeMode }: BoardsProps) {
     );
   } else {
     content = boards.map((board) => (
-      <BoardCard
-        onOpenModal={handleModalOpen}
-        key={`${board.title}-${board.id}`}
-        board={board}
-      />
+      <BoardCard onOpenModal={handleModalOpen} key={board.id} board={board} />
     ));
   }
 

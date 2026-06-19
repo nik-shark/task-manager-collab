@@ -48,18 +48,30 @@ export default function Modal({ isOpen, onClose, mode }: ModalProps) {
   //! Mutations
   // Create new Board
   const createMutation = useMutation({
-    mutationFn: createNewBoard,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["boards"] });
-      onClose();
+    mutationFn: (title: string) => createNewBoard(1, title),
+    onSuccess: (newBoardFromBackend) => {
+      // update cache with new element
+      queryClient.setQueryData<BoardType[]>(["boards"], (oldBoards) => {
+        return oldBoards
+          ? [...oldBoards, newBoardFromBackend]
+          : [newBoardFromBackend];
+      });
     },
   });
   // Edit Board
   const editMutation = useMutation({
     mutationFn: ({ id, title }: { id: string; title: string }) =>
       editBoard(id, title),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["boards"] });
+    onSuccess: (updatedBoardFromBackend) => {
+      queryClient.setQueryData<BoardType[]>(["boards"], (oldBoards) => {
+        return oldBoards
+          ? oldBoards.map((board) =>
+              board.id === updatedBoardFromBackend.id
+                ? updatedBoardFromBackend
+                : board,
+            )
+          : [];
+      });
       onClose();
     },
   });
