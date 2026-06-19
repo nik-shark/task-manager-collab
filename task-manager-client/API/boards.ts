@@ -1,4 +1,4 @@
-// import { type BoardType } from '../types/types';
+import { type BoardType } from '../types/types';
 
 import axios from 'axios'
 
@@ -25,19 +25,19 @@ const api = axios.create({
 // ]
 
 
-export async function getAllBoards(user_id: number) {
+export async function getAllBoards(user_id: number): Promise<BoardType[]> {
 
     // await new Promise(resolve => setTimeout(resolve, 1000));
 
     // return [...MOCK_BOARDS]
 
-    const response = await api.get(`api/v1/boards/}`, {params: {user_id}});
+    const response = await api.get(`api/v1/boards/`, {params: {user_id}});
     return response.data
 
 }
 
 
-export async function createNewBoard(user_id: number, boardTitle: string) {
+export async function createNewBoard(user_id: number, boardTitle: string):Promise<BoardType> {
   // await new Promise(resolve => setTimeout(resolve, 1000))
   // const newBoard = {id: crypto.randomUUID(), user_id: "1", title: boardTitle}  
   // MOCK_BOARDS.push(newBoard)
@@ -54,7 +54,7 @@ export async function deleteBoard( boardId: string) {
   return response.data
 }
 
-export async function editBoard( boardId: string, newTitle: string) {
+export async function editBoard( boardId: string, newTitle: string): Promise<BoardType> {
   // await new Promise(resolve => setTimeout(resolve, 1000));
   // MOCK_BOARDS = MOCK_BOARDS.map(board => {
   //   if (board.id === boardId) {
