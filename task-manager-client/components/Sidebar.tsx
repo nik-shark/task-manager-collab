@@ -13,7 +13,7 @@ export default function Sidebar() {
     isError,
   } = useQuery<BoardType[]>({
     queryKey: ["boards"],
-    queryFn: getAllBoards,
+    queryFn: () => getAllBoards(1),
   });
 
   let content;
@@ -36,7 +36,7 @@ export default function Sidebar() {
       </li>
     );
   } else {
-    content = boards.map((board) => (
+    content = boards.map((board: BoardType) => (
       <li
         key={`button-${board.id}-${board.title}`}
         className="flex flex-col justify-center"
