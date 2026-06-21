@@ -22,12 +22,7 @@
     /boards
     /
 
-# === main user === #
 
-USER_FOR_EVERTHING=user123
-PASS_FOR_EVERTHING=pass123
 
-docker compose up -d db
-docker compose run --rm alembic revision --autogenerate -m "init"
-docker compose run --rm alembic upgrade head
-docker compose up backend
+
+сделать endpoint для boards
