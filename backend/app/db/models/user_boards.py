@@ -7,6 +7,7 @@ from config import Base
 class UsersBoards(Base):
     __tablename__ = 'users_boards'
 
+    # TODO id = UUID, user_id = UUID
     id: Mapped[int] = mapped_column(primary_key=True)
 
     user_id: Mapped[int] = mapped_column(
@@ -23,4 +24,7 @@ class UsersBoards(Base):
 
     user: Mapped['Users'] = relationship(back_populates='user_boards')
 
-    tasks: Mapped[list['Tasks']] = relationship(back_populates='board', cascade='all, delete-orphan')
+    tasks: Mapped[list['Tasks']] = relationship(
+        back_populates='board',
+        cascade='all, delete-orphan'
+    )

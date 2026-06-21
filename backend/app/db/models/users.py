@@ -9,9 +9,13 @@ from config import Base
 class Users(Base):
     __tablename__ = 'users'
 
+    # TODO id = UUID
     id: Mapped[int] = mapped_column(primary_key=True)
+
     user_name: Mapped[str] = mapped_column(String(32), nullable=False)
     email: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+
+    # TODO use argon2
     password: Mapped[str] = mapped_column(String(256), nullable=False)
 
     joined_at: Mapped[datetime.datetime] = mapped_column(

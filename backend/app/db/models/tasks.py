@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from config import Base
 
-from db.models.services_models import TaskStatus
+from enums import TaskStatus
 
 
 class Tasks(Base):
@@ -26,6 +26,11 @@ class Tasks(Base):
 
     description: Mapped[str] = mapped_column(Text, nullable=False)
 
+    deadline_time: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -37,9 +42,5 @@ class Tasks(Base):
         onupdate=func.now()
     )
 
-    deadline_time: Mapped[datetime.datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True
-    )
 
     board: Mapped['UsersBoards'] = relationship(back_populates='tasks')
