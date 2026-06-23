@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import './App.css';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import BoardDetails from '../components/BoardDetails';
 
 export type BoardModalType =
   | { mode: 'add' }
@@ -18,6 +19,8 @@ function App() {
   });
   // Modal open state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // Selected board state
+  const [currentBoardId, setCurrentBoardId] = useState<string | null>(null);
 
   function handleOpenModal() {
     setBoardModalMode({ mode: 'add' });
@@ -32,13 +35,20 @@ function App() {
         mode={boardModalMode}
       />
       <div className="flex h-screen w-full">
-        <Sidebar />
+        <Sidebar
+          currentBoardId={currentBoardId}
+          onSelectBoard={setCurrentBoardId}
+        />
         <div className="relative flex h-full w-full flex-col">
           <Header onOpenModal={handleOpenModal} />
-          <Boards
-            onChangeMode={setBoardModalMode}
-            onOpenModal={() => setIsModalOpen(true)}
-          />
+          {!currentBoardId && (
+            <Boards
+              onSelectBoard={setCurrentBoardId}
+              onChangeMode={setBoardModalMode}
+              onOpenModal={() => setIsModalOpen(true)}
+            />
+          )}
+          {currentBoardId && <BoardDetails currentBoardId={currentBoardId} />}
         </div>
       </div>
     </QueryClientProvider>

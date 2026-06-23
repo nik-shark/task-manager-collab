@@ -1,10 +1,5 @@
 import { type BoardType } from '../types/types';
-
-import axios from 'axios'
-
-const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/'
-})
+import {api} from './instance';
 
 // let MOCK_BOARDS:BoardType[] = [
 //   {

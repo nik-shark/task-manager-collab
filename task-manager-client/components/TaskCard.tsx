@@ -1,4 +1,4 @@
-import type { TaskType } from "./TaskColumn";
+import type { TaskType } from "../types/types";
 import { FaCalendarAlt } from "@react-icons/all-files/fa/FaCalendarAlt";
 interface TaskCardProps {
   columnIndex: number;

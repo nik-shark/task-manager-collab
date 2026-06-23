@@ -9,7 +9,7 @@ export default function Header({ onOpenModal }: HeaderProps) {
         className="rounded-xl mx-2 bg-stone-300 p-4 shadow-md shadow-stone-600 py-4 px-2 hover:text-stone-200 hover:bg-stone-700"
         onClick={onOpenModal}
       >
-        + Add task
+        + Add Board
       </button>
       <button className=" hover:text-stone-200 hover:bg-stone-700 rounded-xl mx-4 shadow-md shadow-stone-600 py-4 px-2">
         ☰
