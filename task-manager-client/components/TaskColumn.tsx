@@ -1,15 +1,5 @@
 import TaskCard from "./TaskCard";
-
-export type TaskType = {
-  title: string;
-  id: string;
-  board_id: string;
-  description: string;
-  created_at: string;
-  changed_at: string;
-  status: string;
-  deadline: string;
-};
+import { type TaskType } from "../types/types";
 
 interface TaskColumnProps {
   columnIndex: number;
@@ -23,13 +13,15 @@ export default function TaskColumn({
   columnIndex,
 }: TaskColumnProps) {
   return (
-    <div>
-      <div className="header flex">
-        <div>
+    <div className="w-70 bg-amber-100">
+      <div className="header flex justify-between items-center ">
+        <div className="flex">
           <h2>{title}</h2>
-          <div>COUNTER</div>
+          <div className="ml-3">0</div>
         </div>
-        <button>+ Add</button>
+        <button className="cursor-pointer bg-stone-400 hover:bg-amber-300 p-2 ">
+          + Add
+        </button>
       </div>
       <ul>
         {tasks.map((task) => (

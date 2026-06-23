@@ -11,12 +11,17 @@ import { type BoardModalType } from "../src/App";
 interface BoardsProps {
   onOpenModal: () => void;
   onChangeMode: Dispatch<SetStateAction<BoardModalType>>;
+  onSelectBoard: Dispatch<SetStateAction<string | null>>;
 }
 type ModalModeType =
   | { mode: "closed" }
   | { mode: "open"; boardId: string; top: number; left: number };
 
-export default function Boards({ onOpenModal, onChangeMode }: BoardsProps) {
+export default function Boards({
+  onOpenModal,
+  onChangeMode,
+  onSelectBoard,
+}: BoardsProps) {
   const [modalMode, setModalMode] = useState<ModalModeType>({ mode: "closed" });
   const queryClient = useQueryClient();
 
@@ -92,7 +97,12 @@ export default function Boards({ onOpenModal, onChangeMode }: BoardsProps) {
     );
   } else {
     content = boards.map((board) => (
-      <BoardCard onOpenModal={handleModalOpen} key={board.id} board={board} />
+      <BoardCard
+        onOpenModal={handleModalOpen}
+        key={board.id}
+        board={board}
+        onSelectBoard={onSelectBoard}
+      />
     ));
   }
 

@@ -1,12 +1,17 @@
 import { type BoardType } from "../types/types";
 import { useQuery } from "@tanstack/react-query";
 import { getAllBoards } from "../API/boards";
+import { type Dispatch, type SetStateAction } from "react";
 
-// interface SidebarProps {
-//   onOpenModal: () => void;
-// }
+interface SidebarProps {
+  currentBoardId: string | null;
+  onSelectBoard: Dispatch<SetStateAction<string | null>>;
+}
 
-export default function Sidebar() {
+export default function Sidebar({
+  currentBoardId,
+  onSelectBoard,
+}: SidebarProps) {
   const {
     data: boards,
     isLoading,
@@ -41,7 +46,12 @@ export default function Sidebar() {
         key={`button-${board.id}-${board.title}`}
         className="flex flex-col justify-center"
       >
-        <button className="bg-amber-500 mx-auto my-2 w-30 rounded-b-lg hover:bg-amber-200">
+        <button
+          className={`mx-auto my-2 w-30 rounded-b-lg hover:bg-amber-200 ${
+            board.id === currentBoardId ? "bg-blue-500" : "bg-amber-500"
+          }`}
+          onClick={() => onSelectBoard(board.id)}
+        >
           {board.title}
         </button>
       </li>
